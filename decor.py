@@ -1,3 +1,5 @@
+from functools import wraps
+
 def testing(func):
     def wrapper():
         print("this is top")
@@ -6,6 +8,7 @@ def testing(func):
     return wrapper
 
 def wrap1(func):
+    @wraps(func)
     def wrapper(*args, **kwargs):
         print("doing this")
         func(*args,**kwargs)
