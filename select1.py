@@ -2,21 +2,17 @@ import socket
 import sys
 import select
 
-s = socket.socket()
+# s = socket.socket()
 
 
-s.connect(("127.0.0.1", 60065))
-input = [sys.stdin, s]
-
+# s.connect(("127.0.0.1", 60065))
+ip = [sys.stdin]
+op = [sys.stdout]
 
 while 1:
-    
-    iready, oready, eready = select.select(input,[],[])
-    for i in iready:
-        if i is sys.stdin:
-            msg = sys.stdin.readline()
-            s.send(msg)
-
-        elif i is s:
-            data = s.recv(2048).decode()
-            print(data)
+    ir, outr, errr = select.select(ip,op,[])
+    if ir:
+        data = sys.stdin.readline()
+        print("you entersome")
+    if outr:
+        sys.stdout.flush()

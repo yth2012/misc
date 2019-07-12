@@ -1,21 +1,6 @@
 import socket
 import threading
 
-
-def listenmsg():
-    while 1:
-        data = soc.recv(2048)
-        if data:
-            data = data.decode()
-            print(data)
-
-def listeninput():
-    while 1:
-        data = input()
-        if data:
-            soc.send(data.encode())
-
-
 url = "127.0.0.1"
 port = 60065
 
@@ -36,10 +21,10 @@ try:
 except:
     print("send chat err")
 
-t1 = threading.Thread(target=listenmsg)
-t2 = threading.Thread(target=listeninput)
-t1.start()
-t2.start()
+data = soc.recv(4096).decode()
+print(data)
+
+
 
 
 
