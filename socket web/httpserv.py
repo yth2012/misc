@@ -1,48 +1,27 @@
-import os
-import socket
-import select
+from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 
 
-class server():
+
+class my_server(ThreadingHTTPServer):
     def __init__(self):
         self.host = '127.0.0.1'
         self.port = 9090
-        self.conns = {}
-        self.sock = None
-        s = socket.socket()
-        s.bind((self.host,self.port))
-        self.sock = s
-        self.sock.listen(5)
-        self.serv_4ever()
+        ThreadingHTTPServer.__init__(self, (self.host, self.port), my_req_handler)
 
-    def acc_conn(self):
-        sock, addr = self.sock.accept()
-        self.conns[addr[0]] = sock
 
-    def serv_4ever(self):
-        self.acc_conn()
-        rready, wready, eready = select.select(self.conns.values(), [], [])
+    
+class my_req_handler(BaseHTTPRequestHandler):
 
-        for client_r in rready:
-            req = ""
-            while 1:
-                buf = client_r.recv(1024)
-                if buf:
-                    req = req + buf.decode()
-                else:
-                    break
-            if req:
-                print(req)
-                #self.handle_req(req)
+    def do_GET(self):
+        self.send_response(200)
 
-        for client_w in wready:
-            pass
+        self.send_header("content-type", "text/html")
+        self.end_headers()
 
-    def handle_req(self, req):
-        pass
+        html_file = open("C:\\Users\\yth2012\misc\\socket web\\index.html","rb")
 
+        self.wfile.write(html_file.read())
 
 if __name__ == "__main__":
-    s = server()
-    
-
+    s = my_server()
+    s.serve_forever()
