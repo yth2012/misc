@@ -17,10 +17,24 @@ class my_req_handler(BaseHTTPRequestHandler):
 
         self.send_header("content-type", "text/html")
         self.end_headers()
+        path = self.path.lstrip("/")
 
-        html_file = open("C:\\Users\\yth2012\misc\\socket web\\index.html","rb")
+        if path:
+            req_path = "C:\\Users\\yth2012\\misc\\socket web\\{}".format(path)
+        else:
+            req_path = "C:\\Users\\yth2012\\misc\\socket web\\index.html"
 
-        self.wfile.write(html_file.read())
+        data = ""
+        with open(req_path, "rb") as html_file:
+            data = html_file.read()
+        
+        if data:
+            self.wfile.write(data)
+        else:
+            self.err404()
+
+    def err404(self):
+        self.send_error(404, "cant find rsc")
 
 if __name__ == "__main__":
     s = my_server()
